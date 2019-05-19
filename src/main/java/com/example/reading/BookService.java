@@ -1,6 +1,7 @@
 package com.example.reading;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +16,22 @@ public class BookService {
         this.restTemplate = rest;
     }
 
-    @HystrixCommand(fallbackMethod = "reliable")
+    @HystrixCommand(
+            fallbackMethod = "reliable",
+            commandProperties = {
+                    @HystrixProperty(
+                            name="circuitBreaker.requestVolumeThreshold",
+                            value="30"),
+                    @HystrixProperty(
+                            name="circuitBreaker.errorThresholdPercentage",
+                            value="25"),
+                    @HystrixProperty(
+                            name = "execution.isolation.thread.timeoutInMilliseconds",
+                            value = "500"),
+                    @HystrixProperty(
+                            name="circuitBreaker.sleepWindowInMilliseconds",
+                            value="60000")
+            })
     public String readingList() {
         URI uri = URI.create("http://localhost:8090/recommended");
 
