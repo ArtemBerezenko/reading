@@ -3,4 +3,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'reading'
+rootProject.name = 'reading-with-hystrix'
